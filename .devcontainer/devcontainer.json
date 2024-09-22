@@ -1,19 +1,14 @@
+// .devcontainer/devcontainer.json
 {
+    "name": "Symfony Dev Container",
     "build": {
         "dockerfile": "Dockerfile"
     },
-    "extensions": [
-		"mblode.twig-language-2",
-		"bmewburn.vscode-intelephense-client",
-		"yahyaahmad.drupal-intellisense",
-		"andrewdavidblum.drupal-smart-snippets",
-		"coenraads.bracket-pair-colorizer",
-		"neilbrayfield.php-docblocker",
-		"editorconfig.editorconfig",
-		"esbenp.prettier-vscode",
-		"dbaeumer.vscode-eslint",
-		"ms-vsliveshare.vsliveshare"
-	],
+    "runArgs": [
+        "--cap-add=SYS_PTRACE",
+        "--security-opt",
+        "seccomp=unconfined"
+    ],
     "settings": {
         "explorer.compactFolders": false,
         "files.associations": {
@@ -45,5 +40,17 @@
         "php.validate.enable": false,
         "php-docblocker.returnGap": true,
         "php-docblocker.useShortNames": true
-    }
+    },
+    "extensions": [
+        "ms-azuretools.vscode-docker",
+        "bmewburn.vscode-intelephense-client",
+        "felixfbecker.php-debug",
+        "xdebug.php-debug",
+        "esbenp.prettier-vscode"
+    ],
+    "forwardPorts": [
+        3306,
+        8080
+    ],
+    "postCreateCommand": "mysql -u root -e 'CREATE DATABASE main;' && composer install && symfony server:start"
 }

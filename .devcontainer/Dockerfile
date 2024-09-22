@@ -1,39 +1,42 @@
-FROM debian:bullseye-slim
-ARG DEBIAN_FRONTEND=noninteractive
-USER root
-COPY php.ini /tmp
+# .devcontainer/Dockerfile
 
-RUN apt-get update -yq
-    # Add updated php sources
-RUN apt-get install curl -yq
-RUN curl -sSL https://packages.sury.org/php/README.txt | bash -x
-RUN apt-get update -yq
-    # Install some common packages
-RUN apt-get install git imagemagick nano openssh-server sqlite3 wget unzip -yq
-RUN sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read|write" pattern="PDF" \/>/g' /etc/ImageMagick-6/policy.xml
-    # Install PHP CLI with some extensions for Drupal development
-RUN apt-get install php8.2-dev php-pear -yq
-RUN apt-get install php8.2-apcu php8.2-curl php8.2-gd php8.2-imagick php8.2-mbstring php8.2-sqlite3 php8.2-zip php8.2-intl -yq
-RUN mkdir -p /etc/php/8.2/cli
-RUN mv /tmp/php.ini /etc/php/8.2/cli/php.ini
-RUN pecl install xdebug
-    # Install NodeJS LTS
-RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash
-RUN apt-get install nodejs -yq
-    # Install Composer
-RUN wget https://getcomposer.org/installer
-RUN php installer --install-dir=/usr/local/bin --filename=composer
-    # Install MySQL
-RUN apt-get update && apt-get install -y mariadb-server php8.2-mysqli mariadb-client
-    # Install Symfony Console
-RUN wget https://get.symfony.com/cli/installer -O - | bash
-RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
-    # Clean up some things
-RUN rm installer
-RUN rm -rf /var/lib/apt/lists/*
-    # Create a user
-#RUN useradd -m symfony -p symfony
-#USER symfony
-ENV SHELL /bin/bash
-# start mariadb
-RUN service mariadb start
+# Utiliser une image de base pour le conteneur de développement
+FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu
+
+# Installer PHP, Composer et les extensions nécessaires
+RUN apt-get update && \
+    apt-get install -y php php-cli php-mysql php-xml php-mbstring unzip curl && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Installer MySQL
+RUN apt-get update && \
+    apt-get install -y mysql-server && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Configurer MySQL
+RUN service mysql start && \
+    mysql -e "CREATE DATABASE main;" && \
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';" && \
+    service mysql stop
+
+# Installer Adminer
+RUN apt-get update && \
+    apt-get install -y adminer && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copier les fichiers de votre projet Symfony dans le conteneur
+COPY . /var/www/symfony
+
+# Définir le répertoire de travail
+WORKDIR /var/www/symfony
+
+# Exposer les ports nécessaires
+EXPOSE 3306 8080
+
+# Démarrer les services
+CMD service mysql start && \
+    php -S 0.0.0.0:8080 -t public
