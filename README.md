@@ -19,6 +19,32 @@ Vous devez installer PHP sur votre système. Assurez-vous également de créer u
 
 Vous pouvez télécharger PHP à partir de [php.net](https://www.php.net/downloads).
 
+Vous devrez modifier quelques extensions de PHP. Décommentez les lignes suivantes dans le fichier de configuration PHP :
+
+extension=curl
+extension=fileinfo
+extension=gd
+extension=mbstring
+extension=mysqli
+extension=pdo_mysql
+extension=openssl
+extension=intl
+extension=pdo_sqlite
+zend_extension=opcache
+extension=zip
+
+
+extension_dir = "ext"
+
+
+Modifier la ligne suivante : 
+realpath_cache_size = 5M
+
+En suivant ces étapes, vous serez prêt à créer et à développer des applications avec Symfony.
+
+
+
+
 
 ### Installation de l'outil CLI Symfony
 
