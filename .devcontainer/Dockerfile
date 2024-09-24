@@ -3,6 +3,10 @@
 # Utiliser une image de base pour le conteneur de développement
 FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu
 
+# Définir les variables d'environnement
+ENV MYSQL_ROOT_PASSWORD=rootpassword
+ENV MYSQL_DATABASE=fortunecookie
+
 # Installer PHP, Composer et les extensions nécessaires
 RUN apt-get update && \
     apt-get install -y php php-cli php-mysql php-xml php-mbstring unzip curl && \
@@ -18,10 +22,10 @@ RUN apt-get update && \
 
 # Configurer MySQL
 RUN service mysql start && \
-    mysql -e "CREATE DATABASE main;" && \
+    mysql -e "CREATE DATABASE fortuneCookie;" && \
     mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';" && \
     service mysql stop
-
+    
 # Installer Adminer
 RUN apt-get update && \
     apt-get install -y adminer && \

@@ -1,98 +1,119 @@
+
 # Tutorials, Fortune Cookies & Doctrine Queries
 
-Ce dépôt contient le code et le script pour les [tutoriels sur les requêtes Doctrine](https://symfonycasts.com/screencast/doctrine-queries) sur SymfonyCasts.
+## Getting Started (Local)
+
+### Étapes pour configurer ce projet Symfony en local :
+
+1. Clonez ce dépôt sur votre machine locale :
+
+    ```bash
+    git clone https://github.com/your-username/symfony-SP.git
+    ```
 
 ## Configuration
-## Setup
 
-Pour le faire fonctionner, suivez ces étapes :
+### Installation de l'outil CLI Symfony
 
-**Télécharger les dépendances de Composer**
+Pour installer l'outil CLI Symfony, suivez les étapes suivantes :
 
-Assurez-vous d'avoir [installé Composer ](https://getcomposer.org/download/) 
-et exécutez ensuite :
+1. **Installer Scoop** (Gestionnaire de paquets pour Windows)  
+   Ouvrez un terminal PowerShell (version 5.1 ou supérieure) et exécutez la commande suivante :
+
+    ```bash
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+    ```
+
+2. **Installer Symfony CLI** :
+
+    ```bash
+    scoop install symfony-cli
+    ```
+
+3. **Vérifiez l'installation** en exécutant la commande suivante :
+
+    ```bash
+    symfony -v
+    ```
+
+    Cela affichera la version de Symfony CLI confirmant ainsi la réussite de l'installation.
+
+4. **Vérifiez les prérequis Symfony** en exécutant :
+
+    ```bash
+    symfony check:req
+    ```
+
+    Ce script vérifie si votre environnement remplit les conditions nécessaires pour exécuter une application Symfony.
+
+### Téléchargement des dépendances Composer
+
+Assurez-vous d'avoir [installé Composer](https://getcomposer.org/download/), puis exécutez la commande suivante dans votre projet :
 
 ```bash
 composer install
 ```
 
-Vous devrez éventuellement exécuter php composer.phar install, 
-selon comment vous avez installé Composer.
+### Configuration de la base de données
 
-**Configuration de la base de données**
+Si MySQL n'est pas encore installé, vous devez l'installer pour que votre application Symfony puisse se connecter à une base de données MySQL.
 
-Le code est livré avec un fichier docker-compose.yaml et nous recommandons
-d'utiliser Docker pour démarrer un conteneur de base de données. 
-PHP sera toujours installé en local, mais vous vous connecterez à une base de données
- à l'intérieur de Docker. C'est facultatif, mais je pense que vous allez l'adorer !
+1. **Télécharger MySQL** :  
+   Rendez-vous sur le site officiel [MySQL Community Downloads](https://dev.mysql.com/downloads/installer/) et suivez les instructions.
 
-Tout d'abord, assurez-vous d'avoir Docker installé et en cours d'exécution. 
-Pour démarrer le conteneur, exécutez :
+2. **Extension MySQL pour Visual Studio Code** :  
+   Utilisez l'extension "Database" pour Visual Studio Code afin d'interagir avec votre base de données. Vous pouvez l'installer via le gestionnaire d'extensions de VS Code.
 
-```
-docker compose up -d
-```
+3. **Créer la base de données** :  
+   Une fois MySQL installé et configuré, exécutez les commandes suivantes pour créer et préparer la base de données :
 
-Ensuite, construisez la base de données avec :
+    ```bash
+    symfony console doctrine:database:create --if-not-exists
+    symfony console doctrine:schema:update --force
+    symfony console doctrine:fixtures:load
+    ```
 
-```
-# "symfony console" is equivalent to "bin/console"
-# but it's aware of your database container
-symfony console doctrine:database:create --if-not-exists
-symfony console doctrine:schema:update --force
-symfony console doctrine:fixtures:load
-```
+    *Si vous recevez l'erreur "Le serveur MySQL a disparu", attendez quelques secondes et réessayez. Le conteneur MySQL pourrait encore être en cours de démarrage.*
 
-(Si vous obtenez une erreur concernant "Le serveur MySQL a disparu", 
-attendez quelques secondes et réessayez - le conteneur est probablement encore en train de démarrer).
+4. **Configuration sans Docker** :  
+   Si vous ne souhaitez pas utiliser Docker, démarrez simplement votre propre serveur MySQL et mettez à jour la variable `DATABASE_URL` dans votre fichier `.env` ou `.env.local` avant d'exécuter les commandes ci-dessus.
 
-Si vous ne souhaitez pas utiliser Docker, assurez-vous simplement de démarrer votre propre serveur de base de données
-et de mettre à jour la variable d'environnement  `DATABASE_URL` dans
-`.env` ou `.env.local`avant d'exécuter les commandes ci-dessus.
+### Démarrer le serveur Web Symfony
 
-**Démarrez le serveur Web Symfony**
+Pour démarrer le serveur Web Symfony, ouvrez un terminal, accédez au projet et exécutez la commande suivante :
 
-You can use Nginx or Apache, but Symfony's local web server
-works even better.
-
-Vous pouvez utiliser Nginx ou Apache, mais le serveur Web local de Symfony fonctionne encore mieux.
-
-Pour installer le serveur Web local Symfony, suivez les instructions
-« Téléchargement du client Symfony » trouvées ici :: https://symfony.com/download 
-- vous ne devez le faire qu'une seule fois sur votre système.
-
-Ensuite, pour démarrer le serveur Web, ouvrez un terminal, accédez au projet et exécutez :
-
-```
+```bash
 symfony serve
 ```
 
-(Si c'est la première fois que vous utilisez cette commande, 
-vous verrez peut-être une erreur que vous devrez `symfony server:ca:install` d'abord exécuter).
+*Si vous rencontrez une erreur indiquant que vous devez installer un certificat CA, exécutez la commande suivante :*
 
-Consultez maintenant le site à `https://localhost:8000`
-
-
-
-**FACULTATIF L: Webpack Encore Assets**
-
-Cette application utilise Webpack Encore pour les fichiers CSS, 
-JS et image. Mais les fichiers construits sont déjà inclus... 
-
-vous n'avez donc pas besoin de télécharger ou de construire quoi que ce soit si vous ne le souhaitez pas !
-
-Mais si vous souhaitez jouer avec le CSS/JS et créer les fichiers finaux, pas de problème. 
-Assurez-vous d'avoir installé `npm`  (`npm` fourni avec Node), puis exécutez :
-
-```
-yarn install
-yarn encore dev --watch
-
-# or
-npm install
-npm run watch
+```bash
+symfony server:ca:install
 ```
 
+Accédez ensuite à votre site web via l'URL suivante : [https://localhost:8000](https://localhost:8000).
+
+### Gestion des assets avec Webpack Encore
+
+1. **Installer Node.js et npm** :  
+   Si vous n'avez pas encore installé Node.js et npm, vous pouvez les télécharger depuis [Node.js Downloads](https://nodejs.org/en/download/).
+
+2. **Installer les dépendances Webpack Encore** :  
+   Dans le répertoire de votre projet, exécutez les commandes suivantes pour installer les dépendances et compiler les assets :
+
+    ```bash
+    yarn install
+    yarn encore dev --watch
+    ```
+
+    Ou, si vous préférez utiliser npm :
+
+    ```bash
+    npm install
+    npm run watch
+    ```
 
 
 

@@ -1,3 +1,4 @@
+# Ignore Docker override file
 docker-compose.override.yml
 
 ###> symfony/framework-bundle ###
@@ -16,3 +17,26 @@ docker-compose.override.yml
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+# Ignore IDE and editor specific files
+/.idea/
+/.vscode/
+/*.swp
+*~
+
+# Ignore log files and temporary files
+/logs/
+/tmp/
+/*.log
+
+# Ignore Composer dependencies
+/vendor/
+
+# Ignore PHPUnit result cache
+.phpunit.result.cache
+
+# Ignore coverage reports
+/coverage/
+
+# Ignore build artifacts
+/build/
