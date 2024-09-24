@@ -1,0 +1,8 @@
+# Normaliser les fins de ligne pour tous les fichiers texte
+* text=auto
+
+# Ignorer les fichiers .env
+.env -text
+
+# Ignorer les fichiers dans le répertoire public/build
+public/build/* -text
