@@ -13,6 +13,13 @@
 
 ## Configuration
 
+# Vérification de l'installation de PHP
+
+Vous devez installer PHP sur votre système. Assurez-vous également de créer un répertoire à la racine de PHP pour y placer le contenu du dossier. 
+
+Vous pouvez télécharger PHP à partir de [php.net](https://www.php.net/downloads).
+
+
 ### Installation de l'outil CLI Symfony
 
 Pour installer l'outil CLI Symfony, suivez les étapes suivantes :
